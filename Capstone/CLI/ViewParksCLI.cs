@@ -21,7 +21,6 @@ namespace Capstone.CLI
                 Console.WriteLine();
                 Console.WriteLine("Select a Park for Further Details");
                 GetParks();
-                Console.WriteLine("4) ...");
                 Console.WriteLine("Q) Quit");
                 Console.WriteLine();
 
