@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Capstone.DAL;
+using Capstone.DAL.Interfaces;
+using Capstone.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,17 +9,20 @@ namespace Capstone.CLI
 {
     public class ViewParksCLI
     {
+        public const string DatabaseConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=NPCampsite;Integrated Security=True";
+
         public void Display()
         {
             while (true)
             {
+
+
+
                 PrintHeader();
 
                 Console.WriteLine();
                 Console.WriteLine("Select a Park for Further Details");
-                Console.WriteLine("\t1) Option1");
-                Console.WriteLine("\t2) Option2");
-                Console.WriteLine("\t3) Option3");
+                GetParks();
                 Console.WriteLine("\t4) ...");
                 Console.WriteLine("\tQ) Quit");
                 Console.WriteLine();
@@ -46,6 +52,7 @@ namespace Capstone.CLI
                 Console.ReadLine();
                 Console.Clear();
             }
+
         }
 
         private void PrintHeader()
@@ -75,5 +82,26 @@ ______                                       _    _
 \_| \_| \___||___/ \___||_|     \_/   \__,_| \__||_| \___/ |_| |_|       
                                                                     ");
         }
+
+        private void GetParks()
+        {
+            IParkDAL parkdal = new ParkSqlDAL(DatabaseConnectionString);
+            IList<Park> parks = parkdal.GetParks();
+
+            for (int i = 0; i < parks.Count; i++) 
+            {
+                Console.WriteLine($"{parks[i].ParkId}) {parks[i].Name}");
+            }
+        }
+
+
+        //private void GetParks()
+        //{
+        //    ParkSqlDAL parkdal = new ParkSqlDAL(DatabaseConnectionString);
+        //    public List<Park> pinks = new List<Park>();
+
+        //pinks = parkdal.GetParks();
+        //}
+
     }
 }
