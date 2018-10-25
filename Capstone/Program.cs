@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Capstone.CLI;
+using System;
 
 namespace capstone
 {
@@ -6,7 +7,8 @@ namespace capstone
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ViewParksCLI vpcli = new ViewParksCLI();
+            vpcli.Display();
         }
     }
 }
