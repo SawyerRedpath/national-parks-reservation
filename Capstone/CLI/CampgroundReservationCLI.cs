@@ -5,11 +5,10 @@ using System.Text;
 
 namespace Capstone.CLI
 {
-    public class ParkCampgroundsCLI
+    public class CampgroundReservationCLI
     {
-        private IList<Campground> campgrounds = new List<Campground>();
-
-        public ParkCampgroundsCLI(IList<Campground> campgrounds)
+        private List<Campground> campgrounds;
+        public CampgroundReservationCLI(List<Campground> campgrounds)
         {
             this.campgrounds = campgrounds;
         }
@@ -18,42 +17,25 @@ namespace Capstone.CLI
         {
             while (true)
             {
-                Console.WriteLine("Park Campgrounds");
-                PrintCampgroundsInformation(campgrounds);
-
-
+                Console.WriteLine("Search for Campground Reservation");
+                PrintCampgroundReservationInformation(campgrounds);
 
                 Console.WriteLine();
-                Console.WriteLine("Select a Command");
-                Console.WriteLine("1) Search for Available Reservation");
-                Console.WriteLine("2) Return to Previous Screen");
+                Console.Write("Which campground (enter 0 to cancel)? ");
+                int campgroundId = int.Parse(Console.ReadLine());
+                Console.Write("What is the arrival date? ");
+                DateTime fromDate = DateTime.Parse(Console.ReadLine());
+                Console.Write("What is the departure date? ");
+                DateTime toDate = DateTime.Parse(Console.ReadLine());
 
-                Console.Write("What option do you want to select? ");
-                string input = Console.ReadLine();
-                // Search for available reservation
-                if (input == "1")
-                {
-                    Console.WriteLine("Searching for available reservation...");
-                    Console.Clear();
-                    CampgroundReservationCLI CRCli = new CampgroundReservationCLI();
-                }
-                // Return to previous screen
-                else if (input == "2")
-                {
-                    Console.WriteLine("Returning to previous screen...");
-                    break;
-                }
-
-                else
-                {
-                    Console.WriteLine("Please try again");
-                }
+                // SearchForAvailableReservation()
 
                 Console.ReadLine();
             }
-        }
 
-        private void PrintCampgroundsInformation(IList<Campground> campgrounds)
+            
+        }
+        private void PrintCampgroundReservationInformation(IList<Campground> campgrounds)
         {
             List<string> months = new List<string>();
             months.Add("January");
@@ -82,7 +64,7 @@ namespace Capstone.CLI
             {
                 Campground campground = campgrounds[i];
                 string openMonth = months[campground.OpenFrom - 1];
-                string closeMonth = months[campground.OpenTo -1];
+                string closeMonth = months[campground.OpenTo - 1];
 
                 Console.WriteLine($"#{campground.CampgroundId.ToString().PadRight(5)}{campground.Name.PadRight(20)}{openMonth.PadRight(15)}{closeMonth.PadRight(15)}{String.Format("{0:C2}", campground.DailyFee)}");
             }

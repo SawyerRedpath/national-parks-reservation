@@ -9,7 +9,6 @@ namespace Capstone.CLI
 {
     public class ViewParksCLI
     {
-        public const string DatabaseConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=NPCampsite;Integrated Security=True";
         
         public void Display()
         {
@@ -81,7 +80,7 @@ ______                                       _    _
 
         private void GetParks()
         {
-            IParkDAL parkdal = new ParkSqlDAL(DatabaseConnectionString);
+            IParkDAL parkdal = new ParkSqlDAL(DatabaseConnectionString.DatabaseString);
             IList<Park> parks = parkdal.GetParks();
 
             for (int i = 0; i < parks.Count; i++) 
@@ -91,9 +90,9 @@ ______                                       _    _
         }
 
         // Gets a single parks information
-        public Park GetPark(int parkId)
+        private Park GetPark(int parkId)
         {
-            IParkDAL parkdal = new ParkSqlDAL(DatabaseConnectionString);
+            IParkDAL parkdal = new ParkSqlDAL(DatabaseConnectionString.DatabaseString);
             Park park = parkdal.GetPark(parkId);
             return park;
         }

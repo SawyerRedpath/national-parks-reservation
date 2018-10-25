@@ -1,4 +1,6 @@
-﻿using Capstone.Models;
+﻿using Capstone.DAL;
+using Capstone.DAL.Interfaces;
+using Capstone.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +10,7 @@ namespace Capstone.CLI
     public class ParkInformationCLI
     {
         private Park park;
+        private IList<Campground> campgrounds;
 
         // Constructor
         public ParkInformationCLI(Park park)
@@ -35,6 +38,9 @@ namespace Capstone.CLI
                 if (input == "1")
                 {
                     Console.WriteLine("Viewing Campgrounds...");
+                    campgrounds = GetCampgrounds(park.ParkId);
+                    ParkCampgroundsCLI PCCli = new ParkCampgroundsCLI(campgrounds);
+                    PCCli.Display();
                 }
                 // Search for Reservation
                 else if (input == "2")
@@ -56,7 +62,7 @@ namespace Capstone.CLI
             }
         }
 
-        public void PrintParkInformation(Park park)
+        private void PrintParkInformation(Park park)
         {
             Console.WriteLine(park.Name);
             Console.WriteLine($"Location: {park.Location.PadLeft(12)}");
@@ -66,6 +72,13 @@ namespace Capstone.CLI
             Console.WriteLine();
             Console.WriteLine(park.Description);
             Console.WriteLine();
+        }
+
+        private IList<Campground> GetCampgrounds(int parkId)
+        {
+            ICampgroundDAL campdal = new CampgroundSqlDAL(DatabaseConnectionString.DatabaseString);
+            IList<Campground> campgrounds = campdal.GetCampgrounds(parkId);
+            return campgrounds;
         }
     }
 }
