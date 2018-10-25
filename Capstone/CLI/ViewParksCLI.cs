@@ -10,43 +10,40 @@ namespace Capstone.CLI
     public class ViewParksCLI
     {
         public const string DatabaseConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=NPCampsite;Integrated Security=True";
-
+        
         public void Display()
         {
             while (true)
             {
-
-
 
                 PrintHeader();
 
                 Console.WriteLine();
                 Console.WriteLine("Select a Park for Further Details");
                 GetParks();
-                Console.WriteLine("\t4) ...");
-                Console.WriteLine("\tQ) Quit");
+                Console.WriteLine("4) ...");
+                Console.WriteLine("Q) Quit");
                 Console.WriteLine();
 
                 Console.Write("What option do you want to select? ");
-                string input = Console.ReadLine();
+                string input = (Console.ReadLine());
 
-                if (input == "1")
+
+                Console.Clear();
+
+                switch (input.ToUpper())
                 {
-                    Console.WriteLine("Performing menu option 1");
-                }
-                else if (input == "2")
-                {
-                    //Submenu1CLI submenu = new Submenu1CLI();
-                    //submenu.Display();
-                }
-                else if (input == "Q")
-                {
-                    Console.WriteLine("Quitting");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Please try again");
+                    case "1":
+                    case "2":
+                    case "3":
+                        int numInput = int.Parse(input);
+                        Park park = GetPark(numInput);
+                        ParkInformationCLI PiCli = new ParkInformationCLI(park);
+                        PiCli.Display();
+                        break;
+
+
+                    
                 }
 
                 Console.ReadLine();
@@ -94,14 +91,13 @@ ______                                       _    _
             }
         }
 
-
-        //private void GetParks()
-        //{
-        //    ParkSqlDAL parkdal = new ParkSqlDAL(DatabaseConnectionString);
-        //    public List<Park> pinks = new List<Park>();
-
-        //pinks = parkdal.GetParks();
-        //}
+        // Gets a single parks information
+        public Park GetPark(int parkId)
+        {
+            IParkDAL parkdal = new ParkSqlDAL(DatabaseConnectionString);
+            Park park = parkdal.GetPark(parkId);
+            return park;
+        }
 
     }
 }

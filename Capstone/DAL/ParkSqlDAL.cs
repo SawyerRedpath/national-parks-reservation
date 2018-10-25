@@ -17,6 +17,41 @@ namespace Capstone.DAL
             connectionString = databaseconnectionString;
         }
 
+        public Park GetPark(int parkId)
+        {
+            Park park = new Park();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    // Open connection
+                    conn.Open();
+
+                    // Create the command
+                    SqlCommand command = new SqlCommand("SELECT * FROM park WHERE park_id = @park_id", conn);
+                    command.Parameters.AddWithValue("@park_id", parkId);
+
+
+                    // Execute the command
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    // Loop through each row
+                    while (reader.Read())
+                    {
+                        park = ConvertRowToPark(reader);
+                    }
+               
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error reading park data");
+                throw;
+            }
+
+            return park;
+        }
+
         public IList<Park> GetParks()
         {
             List<Park> parks = new List<Park>();
@@ -51,10 +86,7 @@ namespace Capstone.DAL
             return parks;
         }
 
-        public IList<Park> GetParks(string name)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         private Park ConvertRowToPark(SqlDataReader reader)
         {
@@ -68,11 +100,5 @@ namespace Capstone.DAL
             park.Visitors = Convert.ToInt32(reader["visitors"]);
             return park;
         }
-
-        
-        //public IList<Park> GetParks(string name)
-        //{
-        //    throw NotImplementedException;
-        //}
     }
 }

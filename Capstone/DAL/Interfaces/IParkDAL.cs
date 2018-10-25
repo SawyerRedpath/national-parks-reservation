@@ -13,6 +13,6 @@ namespace Capstone.DAL.Interfaces
         IList<Park> GetParks();
 
         // Gets all parks with a certain name
-        IList<Park> GetParks(string name);
+        Park GetPark(int parkId);
     }
 }
