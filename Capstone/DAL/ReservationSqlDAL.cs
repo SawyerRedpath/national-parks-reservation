@@ -46,11 +46,5 @@ namespace Capstone.DAL
                 throw;
             }
         }
-
-        // Is this neccesary? not sure
-        public IList<Reservation> GetReservations()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

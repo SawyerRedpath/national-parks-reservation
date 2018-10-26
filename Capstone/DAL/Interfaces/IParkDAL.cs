@@ -12,7 +12,7 @@ namespace Capstone.DAL.Interfaces
         // Gets all available parks in alphabetical order
         IList<Park> GetParks();
 
-        // Gets all parks with a certain name
+        // Gets all parks with a certain id
         Park GetPark(int parkId);
     }
 }

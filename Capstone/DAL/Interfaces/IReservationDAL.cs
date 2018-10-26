@@ -9,9 +9,7 @@ namespace Capstone.DAL.Interfaces
     {
         // All methods to be implemented by ReservationDAL
 
-        // Gets available reservations for a certain campground
-        IList<Reservation> GetReservations();
-
+        // Adds a reservation
         (bool,int) AddNewReservation(Reservation reservation);
 
 
