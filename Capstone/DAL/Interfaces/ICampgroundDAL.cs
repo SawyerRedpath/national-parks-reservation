@@ -11,5 +11,8 @@ namespace Capstone.DAL.Interfaces
 
         // Get campgrounds in a certain park
         IList<Campground> GetCampgrounds(int parkId);
+
+        // Get all campgrounds (BONUS)
+        //IList<Campground> GetCampgrounds()
     }
 }

@@ -10,7 +10,7 @@ namespace Capstone.DAL.Interfaces
         // All methods to be implemented by SiteDAL
 
         // Gets sites that are available for a reservation
-        IList<Site> GetSites(int campgroundId, DateTime fromDate, DateTime toDate);
+        IList<Site> GetSites(int campgroundId, string fromDate, string toDate);
 
     }
 }

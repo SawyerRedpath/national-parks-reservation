@@ -35,7 +35,8 @@ namespace Capstone.CLI
                 {
                     Console.WriteLine("Searching for available reservation...");
                     Console.Clear();
-                    CampgroundReservationCLI CRCli = new CampgroundReservationCLI();
+                    CampgroundReservationCLI CRCli = new CampgroundReservationCLI(campgrounds);
+                    CRCli.Display();
                 }
                 // Return to previous screen
                 else if (input == "2")

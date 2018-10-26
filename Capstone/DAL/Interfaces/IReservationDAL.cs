@@ -11,5 +11,10 @@ namespace Capstone.DAL.Interfaces
 
         // Gets available reservations for a certain campground
         IList<Reservation> GetReservations();
+
+        (bool,int) AddNewReservation(Reservation reservation);
+
+
+
     }
 }

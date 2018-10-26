@@ -9,8 +9,15 @@ namespace Capstone.DAL
 {
     public class SiteSqlDAL : ISiteDAL
     {
+        private string connectionString;
+
+        // Constructor
+        public SiteSqlDAL(string databaseconnectionString)
+        {
+            connectionString = databaseconnectionString;
+        }
         // Gets a list of sites that are available for reservation
-        public IList<Site> GetSites(int campgroundId, DateTime fromDate, DateTime toDate)
+        public IList<Site> GetSites(int campgroundId, string fromDate, string toDate)
         {
             // Create a list to return
             List<Site> availableSites = new List<Site>();
@@ -24,7 +31,10 @@ namespace Capstone.DAL
 
                     // Create a command
                     // RETURN HERE
-                    SqlCommand command = new SqlCommand($"", conn);
+                    SqlCommand command = new SqlCommand($"select TOP 5 * from site WHERE campground_id = @campground_id AND site.site_id NOT IN (select site.site_id from site inner join reservation on site.site_id = reservation.site_id WHERE(@from_date BETWEEN from_date AND to_date) AND(@to_date BETWEEN from_date AND to_date) AND(from_date BETWEEN @from_date AND @to_date) AND(to_date BETWEEN @from_date AND @to_date))", conn);
+                    command.Parameters.AddWithValue("@from_date", fromDate);
+                    command.Parameters.AddWithValue("@to_date", toDate);
+                    command.Parameters.AddWithValue("@campground_id", campgroundId);
 
                     // Execute the command
                     SqlDataReader reader = command.ExecuteReader();
@@ -55,6 +65,7 @@ namespace Capstone.DAL
             site.MaxRvLength = Convert.ToInt32(reader["max_rv_length"]);
             site.SiteId = Convert.ToInt32(reader["site_id"]);
             site.SiteNumber = Convert.ToInt32(reader["site_number"]);
+            site.Utilities = Convert.ToInt32(reader["utilities"]);
 
             return site;
         }

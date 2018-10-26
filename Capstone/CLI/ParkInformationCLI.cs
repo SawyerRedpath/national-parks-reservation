@@ -33,7 +33,7 @@ namespace Capstone.CLI
                 Console.WriteLine("3) Return to Previous Screen");
 
                 Console.Write("What option do you want to select? ");
-                string input = Console.ReadLine();
+                string input = Console.ReadLine().ToUpper();
                 // View Campgrounds
                 if (input == "1")
                 {
@@ -46,6 +46,8 @@ namespace Capstone.CLI
                 else if (input == "2")
                 {
                     Console.WriteLine("Searching for Reservation...");
+                    CampgroundReservationCLI CrCli = new CampgroundReservationCLI(campgrounds);
+                    CrCli.Display();
                 }
                 // Return to Previous Screen
                 else if (input == "3")
@@ -65,7 +67,7 @@ namespace Capstone.CLI
         private void PrintParkInformation(Park park)
         {
             Console.WriteLine(park.Name);
-            Console.WriteLine($"Location: {park.Location.PadLeft(12)}");
+            Console.WriteLine($"Location: {park.Location.PadLeft(11)}");
             Console.WriteLine($"Established: {park.EstablishDate.ToString().PadLeft(25)}");
             Console.WriteLine($"Area: {park.Area.ToString().PadLeft(16)}");
             Console.WriteLine($"Annual Visitors: {park.Visitors.ToString()}");

@@ -1,4 +1,6 @@
-﻿using Capstone.Models;
+﻿using Capstone.DAL;
+using Capstone.DAL.Interfaces;
+using Capstone.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,8 +9,9 @@ namespace Capstone.CLI
 {
     public class CampgroundReservationCLI
     {
-        private List<Campground> campgrounds;
-        public CampgroundReservationCLI(List<Campground> campgrounds)
+        private IList<Campground> campgrounds;
+        private int campgroundId;
+        public CampgroundReservationCLI(IList<Campground> campgrounds)
         {
             this.campgrounds = campgrounds;
         }
@@ -22,15 +25,36 @@ namespace Capstone.CLI
 
                 Console.WriteLine();
                 Console.Write("Which campground (enter 0 to cancel)? ");
-                int campgroundId = int.Parse(Console.ReadLine());
-                Console.Write("What is the arrival date? ");
-                DateTime fromDate = DateTime.Parse(Console.ReadLine());
-                Console.Write("What is the departure date? ");
-                DateTime toDate = DateTime.Parse(Console.ReadLine());
+                campgroundId = int.Parse(Console.ReadLine());
+                Console.Write("What is the arrival date? (MM/DD/YYYY) ");
+                string fromDate = Console.ReadLine();
+                Console.Write("What is the departure date? (MM/DD/YYYY) ");
+                string toDate = Console.ReadLine();
 
-                // SearchForAvailableReservation()
+                GetSites(campgroundId, fromDate, toDate);
 
-                Console.ReadLine();
+                Console.WriteLine();
+                Console.WriteLine("What site should be reserved (enter 0 to cancel) ? ");
+                string input = Console.ReadLine();
+
+                if (input == "0")
+                {
+                    break;
+                }
+
+                Console.WriteLine("What name should the reservation be made under? ");
+                string name = Console.ReadLine();
+
+                Reservation reservation = new Reservation();
+                reservation.SiteId = int.Parse(input);
+                reservation.FromDate = Convert.ToDateTime(fromDate);
+                reservation.ToDate = Convert.ToDateTime(toDate);
+                reservation.Name = name;
+
+                AddNewReservation(reservation);
+                break;
+
+                
             }
 
             
@@ -67,6 +91,70 @@ namespace Capstone.CLI
                 string closeMonth = months[campground.OpenTo - 1];
 
                 Console.WriteLine($"#{campground.CampgroundId.ToString().PadRight(5)}{campground.Name.PadRight(20)}{openMonth.PadRight(15)}{closeMonth.PadRight(15)}{String.Format("{0:C2}", campground.DailyFee)}");
+            }
+        }
+
+        private void GetSites(int campgroundId, string fromDate, string toDate)
+        {
+            ISiteDAL sitedal = new SiteSqlDAL(DatabaseConnectionString.DatabaseString);
+            IList<Site> sites = sitedal.GetSites(campgroundId, fromDate, toDate);
+            string siteNum = "Site No.";
+            string maxOccupancy = "Max Occup.";
+            string accessible = "Accessible?";
+            string rvLength = "RV Length";
+            string utility = "Utility";
+            string cost = "Cost";
+            DateTime fromDateTime = DateTime.Parse(fromDate);
+            DateTime toDateTime = DateTime.Parse(toDate);
+            decimal numDaysStay = (decimal)(toDateTime - fromDateTime).TotalDays;
+
+           
+
+            Console.WriteLine($"{siteNum.PadRight(12)} {maxOccupancy.PadRight(13)} {accessible.PadRight(19)} {rvLength.PadRight(18)} {utility.PadRight(12)} {cost} ");
+            for (int i = 0; i < sites.Count; i++)
+            {
+                if (sites[i].Accessible == 0)
+                {
+                    accessible = "No";
+                }
+                else
+                {
+                    accessible = "Yes";
+                }
+
+                if (sites[i].MaxRvLength == 0)
+                {
+                    rvLength = "N/A";
+                }
+                else
+                {
+                    rvLength = sites[i].MaxRvLength.ToString();
+                }
+
+                if (sites[i].Utilities == 1)
+                {
+                    utility = "Yes";
+                }
+
+                else
+                {
+                    utility = "N/A";
+                }
+
+
+                Console.WriteLine($"{sites[i].SiteNumber.ToString().PadRight(12)} {sites[i].MaxOccupancy.ToString().PadRight(14)}" +
+                    $"{accessible.PadRight(19)} {rvLength.PadRight(18)} {utility.PadRight(12)} {String.Format("{0:C2}", campgrounds[campgroundId].DailyFee * numDaysStay)}");
+            }
+        }
+
+        public void AddNewReservation(Reservation reservation)
+        {
+            IReservationDAL reservationdal = new ReservationSqlDAL(DatabaseConnectionString.DatabaseString);
+            (bool worked, int reservationId) = reservationdal.AddNewReservation(reservation);
+            if (worked == true)
+            {
+                Console.WriteLine($"The reservation has been made and the confirmation id is {reservationId}");
+                
             }
         }
     }
